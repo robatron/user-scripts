@@ -3,7 +3,8 @@
 // @version      0.0.1
 // @description  Always open Slack message links in browser (never the app)
 // @author       robert.mcgui@gmail.com
-// @match        https://zillowgroup.slack.com/*
+// @match        *://zillowgroup.slack.com/*
+// @match        *://zillowgroup.enterprise.slack.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // @sandbox      JavaScript
