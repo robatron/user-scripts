@@ -13,87 +13,87 @@
 let processCount = 0;
 
 // Logging
-const consoleFn = (fn, ...args) => console[fn]("[⏱️SMT]", ...args);
-const log = (...args) => consoleFn("log", ...args);
-const info = (...args) => consoleFn("info", ...args);
-const debug = (...args) => consoleFn("debug", ...args);
+const consoleFn = (fn, ...args) => console[fn]('[⏱️SMT]', ...args);
+const log = (...args) => consoleFn('log', ...args);
+const info = (...args) => consoleFn('info', ...args);
+const debug = (...args) => consoleFn('debug', ...args);
 
 function debounce(func, timeout = 1000) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => func(...args), timeout);
-  };
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), timeout);
+    };
 }
 
 function addAbsDateTime(timestampEl) {
-  const epochTimestamp = timestampEl.getAttribute("data-ts") * 1000;
-  const date = new Date(epochTimestamp);
-  const dateString = date.toDateString();
-  const timeString = date.toTimeString().split(" ")[0];
-  const dateTimeString = [dateString, timeString].join(" ");
-  const timestampLabelEl =
-    timestampEl.getElementsByClassName("c-timestamp__label")[0];
-  const timestampLabelText = timestampLabelEl.innerHTML;
-  const isTimestamped = timestampLabelText.includes(dateTimeString);
+    const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
+    const date = new Date(epochTimestamp);
+    const dateString = date.toDateString();
+    const timeString = date.toTimeString().split(' ')[0];
+    const dateTimeString = [dateString, timeString].join(' ');
+    const timestampLabelEl =
+        timestampEl.getElementsByClassName('c-timestamp__label')[0];
+    const timestampLabelText = timestampLabelEl.innerHTML;
+    const isTimestamped = timestampLabelText.includes(dateTimeString);
 
-  if (!isTimestamped) {
-    info(`Adding ${dateTimeString}`);
-    debug(
-      "timestampEl:",
-      timestampEl,
-      ", epochTimestamp:",
-      epochTimestamp,
-      ", dateTimeString:",
-      dateTimeString
-    );
-    timestampLabelEl.innerHTML = `${timestampLabelText} (${dateTimeString})`;
-  }
+    if (!isTimestamped) {
+        info(`Adding ${dateTimeString}`);
+        debug(
+            'timestampEl:',
+            timestampEl,
+            ', epochTimestamp:',
+            epochTimestamp,
+            ', dateTimeString:',
+            dateTimeString
+        );
+        timestampLabelEl.innerHTML = `${timestampLabelText} (${dateTimeString})`;
+    }
 }
 
 function updateLinkURL(timestampLink) {
-  const origLinkURL = timestampLink.getAttribute("href");
-  const messagePath = origLinkURL.split("archives/")[1];
-  const newLinkURL = `/messages/${messagePath}`;
-  const isLinkUpdated = origLinkURL.includes("messages");
+    const origLinkURL = timestampLink.getAttribute('href');
+    const messagePath = origLinkURL.split('archives/')[1];
+    const newLinkURL = `/messages/${messagePath}`;
+    const isLinkUpdated = origLinkURL.includes('messages');
 
-  if (!isLinkUpdated) {
-    info(`Updating link ${newLinkURL}`);
-    debug(
-      "origLinkURL:",
-      origLinkURL,
-      ", messagePath:",
-      messagePath,
-      ", newLinkURL:",
-      newLinkURL
-    );
-    timestampLink.setAttribute("href", newLinkURL);
-  }
+    if (!isLinkUpdated) {
+        info(`Updating link ${newLinkURL}`);
+        debug(
+            'origLinkURL:',
+            origLinkURL,
+            ', messagePath:',
+            messagePath,
+            ', newLinkURL:',
+            newLinkURL
+        );
+        timestampLink.setAttribute('href', newLinkURL);
+    }
 }
 
 function processTimestampEls() {
-  const timestamps = [...document.getElementsByClassName("c-timestamp")];
-  const tsCount = timestamps.length;
+    const timestamps = [...document.getElementsByClassName('c-timestamp')];
+    const tsCount = timestamps.length;
 
-  log(`Processing ${tsCount} timestamps (#${processCount})`);
+    log(`Processing ${tsCount} timestamps (#${processCount})`);
 
-  for (let i = 0; i < tsCount; ++i) {
-    const timestamp = timestamps[i];
-    addAbsDateTime(timestamp);
-    updateLinkURL(timestamp);
-  }
+    for (let i = 0; i < tsCount; ++i) {
+        const timestamp = timestamps[i];
+        addAbsDateTime(timestamp);
+        updateLinkURL(timestamp);
+    }
 
-  processCount++;
+    processCount++;
 }
 
 function main() {
-  log("Starting Slack Message Tweaks (Tampermonkey)");
+    log('Starting Slack Message Tweaks (Tampermonkey)');
 
-  processTimestampEls();
+    processTimestampEls();
 
-  const body = document.getElementsByTagName("body")[0];
+    const body = document.getElementsByTagName('body')[0];
 
-  body.addEventListener("mouseenter", debounce(processTimestampEls));
+    body.addEventListener('mouseenter', debounce(processTimestampEls));
 }
 
 main();
