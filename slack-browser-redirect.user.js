@@ -23,21 +23,19 @@ function main() {
         '.p-ssb_redirect__loading_messages a',
     );
     const openInBrowserLink = [...redirectLoadingMessageLinks].find((el) =>
-        el.getAttribute('href').includes('/messages/'),
+        el.href.includes('/messages/'),
     );
 
     if (openInBrowserLink) {
-        log(
-            'Found open-in-browser link. Simulating click on ...',
-            openInBrowserLink,
-        );
+        log('Found open-in-browser link:', openInBrowserLink);
 
         if (isDryRun) {
             log('Dry run 🌵 - Skipping');
             return;
         }
 
-        openInBrowserLink.click();
+        log('Simulating click to redirect to', openInBrowserLink.href);
+        setTimeout(() => openInBrowserLink.click(), 1000);
     } else {
         log('No open-in-browser link found 🫤 - Skipping');
     }
