@@ -45,28 +45,26 @@ function addAbsDateTime(timestampEl) {
             ', epochTimestamp:',
             epochTimestamp,
             ', dateTimeString:',
-            dateTimeString
+            dateTimeString,
         );
         timestampLabelEl.innerHTML = `${timestampLabelText} (${dateTimeString})`;
     }
 }
 
+/**
+ * Update message links to point to the web version instead of the app version.
+ * The only difference between the two is the root path:
+ *
+ * - /archives/<message-path> takes us to the app version
+ * - /messages/<message-path> takes us to the web version
+ */
 function updateLinkURL(timestampLink) {
     const origLinkURL = timestampLink.getAttribute('href');
-    const messagePath = origLinkURL.split('archives/')[1];
-    const newLinkURL = `/messages/${messagePath}`;
+    const newLinkURL = origLinkURL.replace('/archives/', '/messages/');
     const isLinkUpdated = origLinkURL.includes('messages');
 
     if (!isLinkUpdated) {
-        info(`Updating link ${newLinkURL}`);
-        debug(
-            'origLinkURL:',
-            origLinkURL,
-            ', messagePath:',
-            messagePath,
-            ', newLinkURL:',
-            newLinkURL
-        );
+        info(`Updating link ${origLinkURL} → ${newLinkURL}`);
         timestampLink.setAttribute('href', newLinkURL);
     }
 }
