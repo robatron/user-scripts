@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Slack Message Tweaks
-// @version      0.1.0
-// @description  Add absolute timestamps to messages, and swap app links for web links
+// @name         Slack Absolute Timestamps
+// @version      0.0.1
+// @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @match        https://app.slack.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
@@ -13,7 +13,7 @@
 let processCount = 0;
 
 // Logging
-const consoleFn = (fn, ...args) => console[fn]('[⏱️SMT]', ...args);
+const consoleFn = (fn, ...args) => console[fn]('[SAT]', ...args);
 const log = (...args) => consoleFn('log', ...args);
 const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
@@ -26,46 +26,21 @@ function debounce(func, timeout = 1000) {
     };
 }
 
-function addAbsDateTime(timestampEl) {
+function replaceAbsTimestamp(timestampEl) {
     const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
     const date = new Date(epochTimestamp);
     const dateString = date.toDateString();
     const timeString = date.toTimeString().split(' ')[0];
-    const dateTimeString = [dateString, timeString].join(' ');
+    const absTimestamp = [dateString, timeString].join(' ');
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
     const timestampLabelText = timestampLabelEl.innerHTML;
-    const isTimestamped = timestampLabelText.includes(dateTimeString);
+    const isTimestamped = timestampLabelText.includes(absTimestamp);
 
     if (!isTimestamped) {
-        info(`Adding ${dateTimeString}`);
-        debug(
-            'timestampEl:',
-            timestampEl,
-            ', epochTimestamp:',
-            epochTimestamp,
-            ', dateTimeString:',
-            dateTimeString,
-        );
-        timestampLabelEl.innerHTML = `${timestampLabelText} (${dateTimeString})`;
-    }
-}
-
-/**
- * Update message links to point to the web version instead of the app version.
- * The only difference between the two is the root path:
- *
- * - /archives/<message-path> takes us to the app version
- * - /messages/<message-path> takes us to the web version
- */
-function updateLinkURL(timestampLink) {
-    const origLinkURL = timestampLink.getAttribute('href');
-    const newLinkURL = origLinkURL.replace('/archives/', '/messages/');
-    const isLinkUpdated = origLinkURL.includes('messages');
-
-    if (!isLinkUpdated) {
-        info(`Updating link ${origLinkURL} → ${newLinkURL}`);
-        timestampLink.setAttribute('href', newLinkURL);
+        info(`Adding ${absTimestamp}`);
+        debug('timestampEl:', timestampEl);
+        timestampLabelEl.innerHTML = absTimestamp;
     }
 }
 
@@ -77,8 +52,7 @@ function processTimestampEls() {
 
     for (let i = 0; i < tsCount; ++i) {
         const timestamp = timestamps[i];
-        addAbsDateTime(timestamp);
-        updateLinkURL(timestamp);
+        replaceAbsTimestamp(timestamp);
     }
 
     processCount++;
