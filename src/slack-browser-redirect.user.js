@@ -1,12 +1,17 @@
 // ==UserScript==
 // @name         Slack Browser Redirect
-// @version      0.0.1
+// @version      0.0.2
 // @description  Always open Slack message links in browser (never the app)
 // @author       robert.mcgui@gmail.com
-// @match        *://zillowgroup.slack.com/*
-// @match        *://zillowgroup.enterprise.slack.com/*
-// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @homepage     https://github.com/robatron/strava-quick-manual-entry
+//
+// @downloadURL  https://gist.githubusercontent.com/robatron/0e4fcda19f77b1b6471ea72cda96ca89/raw/slack-browser-redirect.user.js
+// @updateURL    https://gist.githubusercontent.com/robatron/0e4fcda19f77b1b6471ea72cda96ca89/raw/slack-browser-redirect.user.js
+//
 // @grant        none
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @match        *://zillowgroup.enterprise.slack.com/*
+// @match        *://zillowgroup.slack.com/*
 // @sandbox      JavaScript
 // ==/UserScript==
 

@@ -1,14 +1,17 @@
 // ==UserScript==
 // @name         Strava Quick Manual Entry
-// @version      0.1.1
+// @version      0.1.2
 // @description  Adds an input box to the manual entry page allowing for quick entry of an activity
 // @author       robert.mcgui@gmail.com
-// @match        https://www.strava.com/upload/manual
-// @icon         https://d3nn82uaxijpm6.cloudfront.net/favicon-32x32.png
-// @grant        none
-// @sandbox      JavaScript
+// @homepage     https://github.com/robatron/strava-quick-manual-entry
+//
 // @downloadURL  https://gist.githubusercontent.com/robatron/5590620a5346715062301ebc0af0ed65/raw/sqme.user.js
 // @updateURL    https://gist.githubusercontent.com/robatron/5590620a5346715062301ebc0af0ed65/raw/sqme.user.js
+//
+// @grant        none
+// @icon         https://d3nn82uaxijpm6.cloudfront.net/favicon-32x32.png
+// @match        https://www.strava.com/upload/manual
+// @sandbox      JavaScript
 // ==/UserScript==
 const SCRIPT_NAME = 'Strava Quick Manual Entry';
 const SCRIPT_NAME_SHORT = 'SQME';
@@ -120,7 +123,7 @@ function handleQuickEntryInput(inputVal) {
     const parsedDist = parseDistance(inputVal);
     const parsedTime = parseTime(inputVal);
 
-    log(`\tParsed distance:`,parsedDist);
+    log(`\tParsed distance:`, parsedDist);
     log(`\tParsed time:`, parsedTime);
 
     if ([parsedDist, parsedTime].includes(undefined)) {
@@ -140,7 +143,7 @@ function handleQuickEntryInput(inputVal) {
 
     const inputBox = insertInputBox();
 
-    inputBox.addEventListener('keydown', event => {
+    inputBox.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
 
