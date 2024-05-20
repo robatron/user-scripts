@@ -5,8 +5,8 @@
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/strava-quick-manual-entry
 //
-// @downloadURL  https://gist.githubusercontent.com/robatron/5590620a5346715062301ebc0af0ed65/raw/sqme.user.js
-// @updateURL    https://gist.githubusercontent.com/robatron/5590620a5346715062301ebc0af0ed65/raw/sqme.user.js
+// @downloadURL  https://github.com/robatron/user-scripts/raw/main/src/strava-quick-manual-entry.user.js
+// @updateURL    https://github.com/robatron/user-scripts/raw/main/src/strava-quick-manual-entry.user.js
 //
 // @grant        none
 // @icon         https://d3nn82uaxijpm6.cloudfront.net/favicon-32x32.png
