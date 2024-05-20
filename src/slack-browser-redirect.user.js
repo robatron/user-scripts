@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Slack Browser Redirect
-// @version      0.0.3
+// @version      0.0.4
 // @description  Always open Slack message links in browser (never the app)
 // @author       robert.mcgui@gmail.com
-// @homepage     https://github.com/robatron/strava-quick-manual-entry
+// @homepage     https://github.com/robatron/user-scripts/
 //
 // @downloadURL  https://github.com/robatron/user-scripts/raw/main/src/slack-browser-redirect.user.js
 // @updateURL    https://github.com/robatron/user-scripts/raw/main/src/slack-browser-redirect.user.js

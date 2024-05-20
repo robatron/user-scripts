@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Strava Quick Manual Entry
-// @version      0.1.2
+// @version      0.1.3
 // @description  Adds an input box to the manual entry page allowing for quick entry of an activity
 // @author       robert.mcgui@gmail.com
-// @homepage     https://github.com/robatron/strava-quick-manual-entry
+// @homepage     https://github.com/robatron/user-scripts/
 //
 // @downloadURL  https://github.com/robatron/user-scripts/raw/main/src/strava-quick-manual-entry.user.js
 // @updateURL    https://github.com/robatron/user-scripts/raw/main/src/strava-quick-manual-entry.user.js
