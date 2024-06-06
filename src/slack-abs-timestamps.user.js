@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.0.5
+// @version      0.1.0
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -29,12 +29,12 @@ function debounce(func, timeout = 1000) {
     };
 }
 
-function replaceAbsTimestamp(timestampEl) {
+function replaceAbsTimestamp(timestampEl, channelTitle) {
     const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
     const date = new Date(epochTimestamp);
     const dateString = date.toDateString();
     const timeString = date.toTimeString().split(' ')[0];
-    const absTimestamp = [dateString, timeString].join(' ');
+    const absTimestamp = [dateString, timeString, channelTitle].join(' ');
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
     const timestampLabelText = timestampLabelEl.innerHTML;
@@ -56,19 +56,25 @@ function processTimestampEls() {
         ),
     ];
     const tsCount = timestamps.length;
+    const channelTitleEl = document.querySelectorAll(
+        '.p-view_header__channel_title, .c-channel_entity__name',
+    )[0];
+    const channelTitle = channelTitleEl?.textContent;
+    const formattedChannelTitle = channelTitle && `(#${channelTitle})`;
 
     log(`Processing ${tsCount} timestamps (#${processCount})`);
+    debug('Using channel name', formattedChannelTitle);
 
     for (let i = 0; i < tsCount; ++i) {
         const timestamp = timestamps[i];
-        replaceAbsTimestamp(timestamp);
+        replaceAbsTimestamp(timestamp, formattedChannelTitle);
     }
 
     processCount++;
 }
 
 function main() {
-    log('Starting Slack Message Tweaks (Tampermonkey)');
+    log('Starting Slack Absolute Timestamps (Tampermonkey)');
 
     processTimestampEls();
 
