@@ -47,28 +47,17 @@ function replaceAbsTimestamp(timestampEl, channelTitle) {
     }
 }
 
-function processTimestampEls() {
-    const timestamps = [
-        ...document.querySelectorAll(
-            // Narrowing the selector to only include the topmost timestamp with
-            // `.c-message_kit__gutter__right` class
-            '.c-message_kit__gutter__right .c-timestamp',
-        ),
-    ];
-    const tsCount = timestamps.length;
+function processTimestampEl(timestampEl) {
     const channelTitleEl = document.querySelectorAll(
         '.p-view_header__channel_title, .c-channel_entity__name',
     )[0];
     const channelTitle = channelTitleEl?.textContent;
     const formattedChannelTitle = channelTitle && `(#${channelTitle})`;
 
-    log(`Processing ${tsCount} timestamps (#${processCount})`);
+    log(`Processing timestamp #${processCount}`);
     debug('Using channel name', formattedChannelTitle);
 
-    for (let i = 0; i < tsCount; ++i) {
-        const timestamp = timestamps[i];
-        replaceAbsTimestamp(timestamp, formattedChannelTitle);
-    }
+    replaceAbsTimestamp(timestampEl, formattedChannelTitle);
 
     processCount++;
 }
@@ -76,13 +65,22 @@ function processTimestampEls() {
 function main() {
     log('Starting Slack Absolute Timestamps (Tampermonkey)');
 
-    const observer = new MutationObserver(() => {
-        const timestamps = document.querySelectorAll(
-            '.c-message_kit__gutter__right .c-timestamp',
-        );
-        if (timestamps.length > 0) {
-            processTimestampEls();
-        }
+    // '.c-message_kit__gutter__right .c-timestamp',
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes) {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.classList.length < 1) return;
+
+                    log('Added node with classes', node.classList);
+
+                    if (node.classList.contains('c-timestamp')) {
+                        processTimestampEl(node);
+                    }
+                });
+            }
+        });
     });
 
     observer.observe(document.body, {
