@@ -65,19 +65,20 @@ function processTimestampEl(timestampEl) {
 function main() {
     log('Starting Slack Absolute Timestamps (Tampermonkey)');
 
-    // '.c-message_kit__gutter__right .c-timestamp',
+    const TIMESTAMP_SELCTOR = '.c-message_kit__gutter__right .c-timestamp';
+    const CHANNEL_TITLE_SELECTOR =
+        '.p-view_header__channel_title, .c-channel_entity__name';
 
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.addedNodes) {
                 mutation.addedNodes.forEach((node) => {
-                    if (node.classList.length < 1) return;
+                    const timestampEls =
+                        node?.querySelectorAll(TIMESTAMP_SELCTOR) || [];
 
-                    log('Added node with classes', node.classList);
-
-                    if (node.classList.contains('c-timestamp')) {
-                        processTimestampEl(node);
-                    }
+                    timestampEls.forEach((timestampEl) => {
+                        processTimestampEl(timestampEl);
+                    });
                 });
             }
         });
