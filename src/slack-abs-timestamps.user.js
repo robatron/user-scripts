@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.1.1
+// @version      0.2.0
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -76,11 +76,19 @@ function processTimestampEls() {
 function main() {
     log('Starting Slack Absolute Timestamps (Tampermonkey)');
 
-    processTimestampEls();
+    const observer = new MutationObserver(() => {
+        const timestamps = document.querySelectorAll(
+            '.c-message_kit__gutter__right .c-timestamp',
+        );
+        if (timestamps.length > 0) {
+            processTimestampEls();
+        }
+    });
 
-    const body = document.getElementsByTagName('body')[0];
-
-    body.addEventListener('mouseenter', debounce(processTimestampEls));
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
 }
 
 main();
