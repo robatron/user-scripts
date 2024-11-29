@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.3.2
+// @version      0.4.0
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -24,9 +24,8 @@ const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
 
 const CONTENT_LABEL_FORMAT_RULES = [
-    [/^Conversation with/, '👥'],
-    [/^Thread in channel (.*)/, '🧵 #$1'],
-    [/^Channel (.*) \(private\)/, '#$1 (\u{1F510})'],
+    [/^Conversation with/, 'DM w/'],
+    [/^Thread in channel (.*)/, 'Thread in #$1'],
     [/^Channel (.*)/, '#$1'],
 ];
 
@@ -47,9 +46,14 @@ function formatContentLabel(label) {
  */
 function getAbsTimestamp(epochTimestamp) {
     const date = new Date(epochTimestamp * 1000);
-    const dateString = date.toDateString();
-    const timeString = date.toTimeString().split(' ')[0];
-    return [dateString, timeString];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    const second = String(date.getSeconds()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day} ${hour}:${minute}:${second} (PT)`;
+    return [dateString];
 }
 
 /**
