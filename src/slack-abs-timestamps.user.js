@@ -24,27 +24,47 @@ const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
 
 /**
- * Replace timestamp label with absolute timestamp with the content label suffix
- * (e.g., the channel name) if defined.
+ * Converts an epoch timestamp to an absolute timestamp. Returns an
+ * array containing the date and time strings, e.g.,
+ *
+ * ```js
+ * ['Mon Nov 25 2024',  '20:59:53']
+ * ```
  */
-function replaceAbsTimestamp(timestampEl, contentLabel) {
-    const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
-    const date = new Date(epochTimestamp);
+function getAbsTimestamp(epochTimestamp) {
+    const date = new Date(epochTimestamp * 1000);
     const dateString = date.toDateString();
     const timeString = date.toTimeString().split(' ')[0];
-    const absTimestamp = [dateString, timeString, contentLabel].join(' ');
+    return [dateString, timeString];
+}
+
+/**
+ * Replaces a relative timestamp with an absolute timestamp and appends the
+ * content label (e.g., the channel name) if defined. E.g.,
+ *
+ *     Thu Nov 28 2024 20:59:53 (Conversation with Alice Bobbington)
+ */
+function replaceAbsTimestamp(timestampEl, contentLabel) {
+    const epochTimestamp = timestampEl.getAttribute('data-ts');
+    const [dateString, timeString] = getAbsTimestamp(epochTimestamp);
+    const timestampText = [dateString, timeString, contentLabel].join(' ');
+
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
-    const timestampLabelText = timestampLabelEl.innerHTML;
-    const isTimestamped = timestampLabelText.includes(absTimestamp);
+    const curTimestampText = timestampLabelEl.innerHTML;
+    const isAlreadyTimestamped = curTimestampText.includes(timestampText);
 
-    if (!isTimestamped) {
-        info(`Adding ${absTimestamp}`);
+    if (!isAlreadyTimestamped) {
+        info(`Adding ${timestampText}`);
         debug('timestampEl:', timestampEl);
-        timestampLabelEl.innerHTML = absTimestamp;
+        timestampLabelEl.innerHTML = timestampText;
     }
 }
 
+/**
+ * Passes a timestamp element and the primary content label (e.g., the channel
+ * name) to the timestamp replacement function.
+ */
 function processTimestampEl(timestampEl) {
     const contentLabel = document.querySelectorAll(
         '.p-view_contents--primary',
@@ -61,6 +81,10 @@ function processTimestampEl(timestampEl) {
     processCount++;
 }
 
+/**
+ * Handles new timestamp nodes added to the page from a MutationObserver and
+ * processes them.
+ */
 function processAddedTimestampNodes(observerMutation) {
     // Bail if observer notation is *not* an added node
     if (!observerMutation.addedNodes) return;
@@ -78,9 +102,6 @@ function processAddedTimestampNodes(observerMutation) {
 
 function main() {
     log('Starting Slack Absolute Timestamps (Tampermonkey)');
-
-    // const CHANNEL_TITLE_SELECTOR =
-    //     '.p-view_header__channel_title, .c-channel_entity__name';
 
     const observer = new MutationObserver((mutations) =>
         mutations.forEach(processAddedTimestampNodes),
