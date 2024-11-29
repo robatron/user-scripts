@@ -24,15 +24,15 @@ const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
 
 /**
- * Replace timestamp label with absolute timestamp and the channel name in
- * parentheses (if it exists)
+ * Replace timestamp label with absolute timestamp with the content label suffix
+ * (e.g., the channel name) if defined.
  */
-function replaceAbsTimestamp(timestampEl, channelTitle) {
+function replaceAbsTimestamp(timestampEl, contentLabel) {
     const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
     const date = new Date(epochTimestamp);
     const dateString = date.toDateString();
     const timeString = date.toTimeString().split(' ')[0];
-    const absTimestamp = [dateString, timeString, channelTitle].join(' ');
+    const absTimestamp = [dateString, timeString, contentLabel].join(' ');
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
     const timestampLabelText = timestampLabelEl.innerHTML;
@@ -46,23 +46,22 @@ function replaceAbsTimestamp(timestampEl, channelTitle) {
 }
 
 function processTimestampEl(timestampEl) {
-    const channelTitleEl = document.querySelectorAll(
-        '.p-view_header__channel_title, .c-channel_entity__name',
-    )[0];
-    const channelTitle = channelTitleEl?.textContent;
-    const formattedChannelTitle = channelTitle && `(#${channelTitle})`;
+    const contentLabel = document.querySelectorAll(
+        '.p-view_contents--primary',
+    )[0].ariaLabel;
+    const formattedContentLabel = contentLabel && `(${contentLabel})`;
 
-    log(`Processing timestamp #${processCount}`);
-    debug('Using channel name', formattedChannelTitle);
+    log(
+        `Processing timestamp #${processCount} with content label:`,
+        formattedContentLabel,
+    );
 
-    replaceAbsTimestamp(timestampEl, formattedChannelTitle);
+    replaceAbsTimestamp(timestampEl, formattedContentLabel);
 
     processCount++;
 }
 
 function processAddedTimestampNodes(observerMutation) {
-    const TIMESTAMP_SELCTOR = '.c-message_kit__gutter__right .c-timestamp';
-
     // Bail if observer notation is *not* an added node
     if (!observerMutation.addedNodes) return;
 
@@ -71,9 +70,9 @@ function processAddedTimestampNodes(observerMutation) {
         if (!node?.querySelectorAll) return;
 
         // Process any timestamp elements
-        node.querySelectorAll(TIMESTAMP_SELCTOR).forEach((timestampEl) =>
-            processTimestampEl(timestampEl),
-        );
+        node.querySelectorAll(
+            '.c-message_kit__gutter__right .c-timestamp',
+        ).forEach((timestampEl) => processTimestampEl(timestampEl));
     });
 }
 
