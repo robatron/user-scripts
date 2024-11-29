@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.4.0
+// @version      0.4.1
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -52,7 +52,7 @@ function getAbsTimestamp(epochTimestamp) {
     const hour = String(date.getHours()).padStart(2, '0');
     const minute = String(date.getMinutes()).padStart(2, '0');
     const second = String(date.getSeconds()).padStart(2, '0');
-    const dateString = `${year}-${month}-${day} ${hour}:${minute}:${second} (PT)`;
+    const dateString = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     return [dateString];
 }
 
