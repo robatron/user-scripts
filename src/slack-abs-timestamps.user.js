@@ -44,7 +44,7 @@ function getAbsTimestamp(epochTimestamp) {
  *
  *     Thu Nov 28 2024 20:59:53 (Conversation with Alice Bobbington)
  */
-function replaceAbsTimestamp(timestampEl, contentLabel) {
+function replaceAbsTimestamp(timestampEl, contentLabel, ancestorNode) {
     const epochTimestamp = timestampEl.getAttribute('data-ts');
     const [dateString, timeString] = getAbsTimestamp(epochTimestamp);
     const timestampText = [dateString, timeString, contentLabel].join(' ');
@@ -56,11 +56,12 @@ function replaceAbsTimestamp(timestampEl, contentLabel) {
 
     // Bail if timestamp has already been replaced
     if (isAlreadyTimestamped) {
-        debug('Element already timestamped', timestampEl);
+        debug('Element already timestamped:', timestampEl);
         return;
     }
 
     info(`Adding #${processCount} "${timestampText}"`);
+    debug('‣ timestampEl:', timestampEl, '\n‣ ancestorNode:', ancestorNode);
     timestampLabelEl.innerHTML = timestampText;
     processCount++;
 }
@@ -79,18 +80,20 @@ function processAddedTimestampNodes(observerMutation) {
     )[0].ariaLabel;
     const formattedContentLabel = contentLabel && `(${contentLabel})`;
 
-    debug('Nodes added to DOM', observerMutation.addedNodes);
-
-    observerMutation.addedNodes.forEach((node) => {
+    observerMutation.addedNodes.forEach((addedNode) => {
         // Bail if node is not a parent element
-        if (!node?.querySelectorAll) return;
+        if (!addedNode?.querySelectorAll) return;
 
         // Process any timestamp elements
-        node.querySelectorAll(
-            '.c-message_kit__gutter__right .c-timestamp',
-        ).forEach((timestampEl) =>
-            replaceAbsTimestamp(timestampEl, formattedContentLabel),
-        );
+        addedNode
+            .querySelectorAll('.c-message_kit__gutter__right .c-timestamp')
+            .forEach((timestampEl) => {
+                replaceAbsTimestamp(
+                    timestampEl,
+                    formattedContentLabel,
+                    addedNode,
+                );
+            });
     });
 }
 
