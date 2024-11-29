@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.2.1
+// @version      0.2.2
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
 //
-// @downloadURL  https://github.com/robatron/user-scripts/raw/main/src/slack-abs-timestamps.user.js
-// @updateURL    https://github.com/robatron/user-scripts/raw/main/src/slack-abs-timestamps.user.js
+// @downloadURL  https://raw.githubusercontent.com/robatron/user-scripts/refs/heads/main/src/slack-abs-timestamps.user.js
+// @updateURL    https://raw.githubusercontent.com/robatron/user-scripts/refs/heads/main/src/slack-abs-timestamps.user.js
 //
 // @grant        none
 // @icon         https://a.slack-edge.com/80588/marketing/img/meta/favicon-32.png
