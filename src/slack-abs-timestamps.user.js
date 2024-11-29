@@ -54,14 +54,22 @@ function replaceAbsTimestamp(timestampEl, contentLabel, ancestorNode) {
     const curTimestampText = timestampLabelEl.innerHTML;
     const isAlreadyTimestamped = curTimestampText.includes(timestampText);
 
+    debug(
+        'Processing timestamp elements:',
+        '\n‣ timestampEl:',
+        timestampEl,
+        '\n‣ ancestorNode:',
+        ancestorNode,
+    );
+
     // Bail if timestamp has already been replaced
     if (isAlreadyTimestamped) {
-        debug('Element already timestamped:', timestampEl);
+        info(`Already timestamped "${curTimestampText}". Skipping...`);
         return;
     }
 
     info(`Adding #${processCount} "${timestampText}"`);
-    debug('‣ timestampEl:', timestampEl, '\n‣ ancestorNode:', ancestorNode);
+
     timestampLabelEl.innerHTML = timestampText;
     processCount++;
 }
