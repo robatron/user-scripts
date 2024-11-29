@@ -13,6 +13,8 @@
 // @match        https://app.slack.com/*
 // @sandbox      JavaScript
 // ==/UserScript==
+
+// How many timestamp replacements have been processed total
 let processCount = 0;
 
 // Logging
@@ -21,14 +23,10 @@ const log = (...args) => consoleFn('log', ...args);
 const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
 
-function debounce(func, timeout = 1000) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => func(...args), timeout);
-    };
-}
-
+/**
+ * Replace timestamp label with absolute timestamp and the channel name in
+ * parentheses (if it exists)
+ */
 function replaceAbsTimestamp(timestampEl, channelTitle) {
     const epochTimestamp = timestampEl.getAttribute('data-ts') * 1000;
     const date = new Date(epochTimestamp);
@@ -62,32 +60,34 @@ function processTimestampEl(timestampEl) {
     processCount++;
 }
 
+function processAddedTimestampNodes(observerMutation) {
+    const TIMESTAMP_SELCTOR = '.c-message_kit__gutter__right .c-timestamp';
+
+    // Bail if observer notation is *not* an added node
+    if (!observerMutation.addedNodes) return;
+
+    observerMutation.addedNodes.forEach((node) => {
+        // Bail if node is not a searchable element for some reason
+        if (!node?.querySelectorAll) return;
+
+        // Process any timestamp elements
+        node.querySelectorAll(TIMESTAMP_SELCTOR).forEach((timestampEl) =>
+            processTimestampEl(timestampEl),
+        );
+    });
+}
+
 function main() {
     log('Starting Slack Absolute Timestamps (Tampermonkey)');
 
-    const TIMESTAMP_SELCTOR = '.c-message_kit__gutter__right .c-timestamp';
-    const CHANNEL_TITLE_SELECTOR =
-        '.p-view_header__channel_title, .c-channel_entity__name';
+    // const CHANNEL_TITLE_SELECTOR =
+    //     '.p-view_header__channel_title, .c-channel_entity__name';
 
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes) {
-                mutation.addedNodes.forEach((node) => {
-                    const timestampEls =
-                        node?.querySelectorAll(TIMESTAMP_SELCTOR) || [];
+    const observer = new MutationObserver((mutations) =>
+        mutations.forEach(processAddedTimestampNodes),
+    );
 
-                    timestampEls.forEach((timestampEl) => {
-                        processTimestampEl(timestampEl);
-                    });
-                });
-            }
-        });
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
+    observer.observe(document.body, { childList: true, subtree: true });
 }
 
 main();
