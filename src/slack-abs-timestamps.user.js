@@ -23,6 +23,20 @@ const log = (...args) => consoleFn('log', ...args);
 const info = (...args) => consoleFn('info', ...args);
 const debug = (...args) => consoleFn('debug', ...args);
 
+const CONTENT_LABEL_FORMAT_RULES = [
+    [/^Conversation with/, '👥'],
+    [/^Thread in channel (.*)/, '🧵 #$1'],
+    [/^Channel (.*) \(private\)/, '#$1 (\u{1F510})'],
+    [/^Channel (.*)/, '#$1'],
+];
+
+function formatContentLabel(label) {
+    for (const [pattern, replacement] of CONTENT_LABEL_FORMAT_RULES) {
+        label = label.replace(pattern, replacement);
+    }
+    return label;
+}
+
 /**
  * Converts an epoch timestamp to an absolute timestamp. Returns an
  * array containing the date and time strings, e.g.,
@@ -86,7 +100,7 @@ function processAddedTimestampNodes(observerMutation) {
     const contentLabel = document.querySelectorAll(
         '.p-view_contents--primary',
     )[0].ariaLabel;
-    const formattedContentLabel = contentLabel && `(${contentLabel})`;
+    const formattedContentLabel = '— ' + formatContentLabel(contentLabel);
 
     observerMutation.addedNodes.forEach((addedNode) => {
         // Bail if node is not a parent element
