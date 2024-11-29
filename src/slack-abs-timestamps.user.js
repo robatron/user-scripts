@@ -54,49 +54,43 @@ function replaceAbsTimestamp(timestampEl, contentLabel) {
     const curTimestampText = timestampLabelEl.innerHTML;
     const isAlreadyTimestamped = curTimestampText.includes(timestampText);
 
-    if (!isAlreadyTimestamped) {
-        info(`Adding ${timestampText}`);
-        debug('timestampEl:', timestampEl);
-        timestampLabelEl.innerHTML = timestampText;
+    // Bail if timestamp has already been replaced
+    if (isAlreadyTimestamped) {
+        debug('Element already timestamped', timestampEl);
+        return;
     }
+
+    info(`Adding #${processCount} "${timestampText}"`);
+    timestampLabelEl.innerHTML = timestampText;
+    processCount++;
 }
 
 /**
- * Passes a timestamp element and the primary content label (e.g., the channel
- * name) to the timestamp replacement function.
+ * Finds timestamp nodes added to the page from a MutationObserver and passes
+ * them and the content label (e.g., the channel name) to the timestamp
+ * replacement function.
  */
-function processTimestampEl(timestampEl) {
+function processAddedTimestampNodes(observerMutation) {
+    // Bail if observer notation is *not* an added node
+    if (!observerMutation.addedNodes.length) return;
+
     const contentLabel = document.querySelectorAll(
         '.p-view_contents--primary',
     )[0].ariaLabel;
     const formattedContentLabel = contentLabel && `(${contentLabel})`;
 
-    log(
-        `Processing timestamp #${processCount} with content label:`,
-        formattedContentLabel,
-    );
-
-    replaceAbsTimestamp(timestampEl, formattedContentLabel);
-
-    processCount++;
-}
-
-/**
- * Handles new timestamp nodes added to the page from a MutationObserver and
- * processes them.
- */
-function processAddedTimestampNodes(observerMutation) {
-    // Bail if observer notation is *not* an added node
-    if (!observerMutation.addedNodes) return;
+    debug('Nodes added to DOM', observerMutation.addedNodes);
 
     observerMutation.addedNodes.forEach((node) => {
-        // Bail if node is not a searchable element for some reason
+        // Bail if node is not a parent element
         if (!node?.querySelectorAll) return;
 
         // Process any timestamp elements
         node.querySelectorAll(
             '.c-message_kit__gutter__right .c-timestamp',
-        ).forEach((timestampEl) => processTimestampEl(timestampEl));
+        ).forEach((timestampEl) =>
+            replaceAbsTimestamp(timestampEl, formattedContentLabel),
+        );
     });
 }
 
