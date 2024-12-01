@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.5.1
+// @version      0.5.2
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -25,7 +25,8 @@ const debug = (...args) => consoleFn('debug', ...args);
 
 const CONTENT_LABEL_FORMAT_RULES = [
     [/^Conversation with/, 'DM |'],
-    [/^Thread in channel (.*)/, 'Thread | #$1'],
+    [/^Thread in conversation with/, 'DM (Thread) |'],
+    [/^Thread in channel (.*)/, '#$1 (Thread)'],
     [/^Channel (.*)/, '#$1'],
 ];
 
