@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.4.1
+// @version      0.5.0
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -41,7 +41,7 @@ function formatContentLabel(label) {
  * array containing the date and time strings, e.g.,
  *
  * ```js
- * ['Mon Nov 25 2024',  '20:59:53']
+ * ['2024-11-15',  '20:59:53']
  * ```
  */
 function getAbsTimestamp(epochTimestamp) {
@@ -65,7 +65,7 @@ function getAbsTimestamp(epochTimestamp) {
 function replaceAbsTimestamp(timestampEl, contentLabel, ancestorNode) {
     const epochTimestamp = timestampEl.getAttribute('data-ts');
     const [dateString, timeString] = getAbsTimestamp(epochTimestamp);
-    const timestampText = [dateString, timeString, contentLabel].join(' ');
+    const timestampText = [contentLabel, '-', dateString, timeString].join(' ');
 
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
@@ -104,7 +104,6 @@ function processAddedTimestampNodes(observerMutation) {
     const contentLabel = document.querySelectorAll(
         '.p-view_contents--primary',
     )[0].ariaLabel;
-    const formattedContentLabel = '— ' + formatContentLabel(contentLabel);
 
     observerMutation.addedNodes.forEach((addedNode) => {
         // Bail if node is not a parent element
@@ -117,7 +116,7 @@ function processAddedTimestampNodes(observerMutation) {
                 .forEach((timestampEl) => {
                     replaceAbsTimestamp(
                         timestampEl,
-                        formattedContentLabel,
+                        formatContentLabel(contentLabel),
                         addedNode,
                     );
                 });
