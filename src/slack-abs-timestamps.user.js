@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.5.3
+// @version      0.5.4
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -116,8 +116,8 @@ function processAddedTimestampNodes(observerMutation) {
                 '.c-message_kit__gutter__right .c-timestamp',
             );
 
-            if (timestampEls.length)
-                info('--- Batch processing timestamps in idle process ---');
+            timestampEls.length &&
+                info(`Batch processing ${timestampEls.length} timestamps ...`);
 
             timestampEls.forEach((timestampEl) => {
                 replaceAbsTimestamp(
