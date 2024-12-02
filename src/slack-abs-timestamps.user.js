@@ -28,7 +28,7 @@ const CONTENT_LABEL_FORMAT_RULES = [
     [/^Thread in conversation with/, 'DM |'],
     [/^Thread in channel (.*)/, '#$1 (Thread)'],
     [/^Channel (.*)/, '#$1'],
-    [/ @(\w)/, '$1'], // Remove any @ from names
+    [/ @(\w)/, ' $1'], // Remove any @ from names
 ];
 
 function formatContentLabel(label) {
