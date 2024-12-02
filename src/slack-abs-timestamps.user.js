@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.5.5
+// @version      0.5.6
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -28,6 +28,7 @@ const CONTENT_LABEL_FORMAT_RULES = [
     [/^Thread in conversation with/, 'DM |'],
     [/^Thread in channel (.*)/, '#$1 (Thread)'],
     [/^Channel (.*)/, '#$1'],
+    [/ @(\w)/, '$1'], // Remove any @ from names
 ];
 
 function formatContentLabel(label) {
