@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Slack Absolute Timestamps
-// @version      0.5.6
+// @version      0.5.7
 // @description  Replace messages' relative timestamps with absolute ones
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -67,7 +67,7 @@ function getAbsTimestamp(epochTimestamp) {
 function replaceAbsTimestamp(timestampEl, contentLabel, ancestorNode) {
     const epochTimestamp = timestampEl.getAttribute('data-ts');
     const [dateString, timeString] = getAbsTimestamp(epochTimestamp);
-    const timestampText = [contentLabel, '|', dateString, timeString].join(' ');
+    const timestampText = [dateString, timeString, '|', contentLabel].join(' ');
 
     const timestampLabelEl =
         timestampEl.getElementsByClassName('c-timestamp__label')[0];
