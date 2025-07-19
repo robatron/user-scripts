@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Block YouTube Shorts Playback
-// @version      0.0.6
+// @version      0.0.7
 // @description  Disables and strips Shorts from YouTube
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -23,7 +23,6 @@ const debug = (...args) => consoleFn('debug', ...args);
 
 /**
  * Check if the current page is a shorts page and redirect to the home page if it is.
- * Returns true if the current page is a shorts page, false otherwise.
  */
 function checkAndRedirectShorts() {
     if (window.location.pathname.includes(SHORTS_PATH)) {
@@ -38,35 +37,35 @@ function main() {
     // First check to see if we've directly navigated to a shorts page
     checkAndRedirectShorts();
 
+    let currentTitle = document.title;
     let currentUrl = window.location.href;
 
-    // Watch for document title changes (YouTube updates title on navigation)
-    const titleObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (
-                mutation.type === 'childList' &&
-                mutation.target.nodeName === 'TITLE'
-            ) {
-                const newUrl = window.location.href;
-                if (newUrl !== currentUrl) {
-                    debug(
-                        'URL change detected via title change:',
-                        currentUrl,
-                        '→',
-                        newUrl,
-                    );
-                    currentUrl = newUrl;
-                    checkAndRedirectShorts();
-                }
-            }
-        });
+    // Watch for <title/> changes to detect soft navigations
+    const titleObserver = new MutationObserver(() => {
+        const newTitle = document.title;
+        const newUrl = window.location.href;
+
+        if (newUrl !== currentUrl) {
+            debug('Soft nav detected via <title/> change:');
+            debug(
+                '- title:\n',
+                `    "${currentTitle}" →\n`,
+                `    "${newTitle}"`,
+            );
+            debug('- url:\n', `    "${currentUrl}" →\n`, `    "${newUrl}"\n`);
+
+            currentTitle = newTitle;
+            currentUrl = newUrl;
+
+            checkAndRedirectShorts();
+        }
     });
 
-    // Observe title element changes
     const titleElement = document.querySelector('title');
+
     if (titleElement) {
         titleObserver.observe(titleElement, { childList: true });
-        debug('Title change observer initialized');
+        debug('<title/> change observer initialized');
     }
 }
 
