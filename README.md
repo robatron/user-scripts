@@ -1,6 +1,6 @@
-# Rob's User Scripts
+# [Rob's User Scripts](https://github.com/robatron/user-scripts)
 
-> My personal user scripts (tampermonkey)
+My personal user scripts ([greasemonkey](https://www.greasespot.net/), [tampermonkey](https://www.tampermonkey.net/), etc.)
 
 ## Slack Message Tweaks
 
