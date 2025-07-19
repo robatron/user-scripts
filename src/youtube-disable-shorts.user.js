@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Block YouTube Shorts Playback
-// @version      0.0.5
+// @version      0.0.6
 // @description  Disables and strips Shorts from YouTube
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -65,7 +65,7 @@ function main() {
     // Observe title element changes
     const titleElement = document.querySelector('title');
     if (titleElement) {
-        titleObserver.observe(titleElement, { childList: true, subtree: true });
+        titleObserver.observe(titleElement, { childList: true });
         debug('Title change observer initialized');
     }
 }
