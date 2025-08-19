@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Minimal Full URL Overlay
-// @version      0.0.3
+// @version      0.0.4
 // @description  Always show the full current URL in a tiny overlay for screenshots
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
