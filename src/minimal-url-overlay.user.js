@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Minimal Full URL Overlay
-// @version      0.0.1
+// @version      0.0.3
 // @description  Always show the full current URL in a tiny overlay for screenshots
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -10,9 +10,13 @@
 // @icon         https://www.mozilla.org/media/protocol/img/logos/firefox/browser/logo.f6eb1d086f92.svg
 // @match        *://*/*
 // @include      file:///*
+// @noframes
 // ==/UserScript==
 
 (() => {
+    // Guard: only run in the top window (no iframes)
+    if (window.top !== window.self) return;
+
     // ============================================================================
     // Config
     // ============================================================================
@@ -24,7 +28,7 @@
     const PADDING = '3px 6px';
     const BORDER_RADIUS = '4px';
     const MAX_WIDTH = '95vw';
-    const UPDATE_INTERVAL_MS = 1000; // Polling interval for URL changes
+    const UPDATE_INTERVAL_MS = 800; // Polling interval for URL changes
 
     // ============================================================================
     // Logging
