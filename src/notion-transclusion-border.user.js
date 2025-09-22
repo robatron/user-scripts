@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Notion Transclusion Border
-// @version      0.0.2
+// @version      0.0.3
 // @description  Add a faint border to transclusion blocks in Notion
 // @author       robert.mcgui@gmail.com
 // @homepage     https://github.com/robatron/user-scripts/
@@ -27,7 +27,8 @@ const BORDER_CSS = [
     ['border', BORDER_STYLE].join(':'),
     ['border-radius', BORDER_RADIUS].join(':'),
 ].join(';');
-const TRANSCLUSION_BLOCK_SELECTOR = '.notion-transclusion_container-block';
+const TRANSCLUSION_BLOCK_SELECTOR =
+    '.notion-transclusion_container-block, .notion-transclusion_reference-block';
 
 function main() {
     log('Starting Notion Transclusion Border (Tampermonkey)');
